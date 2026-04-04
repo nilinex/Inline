@@ -1,8 +1,5 @@
 Hooks.once("init", () => {
-    // Делаем название категории в настройках красивым
-    foundry.utils.mergeObject(game.i18n.translations, { "PACKAGE.Inline": "Inline Tools" });
 
-    // 1. Регистрация настроек
     game.settings.register("Inline", "unknownLanguageStyle", {
         name: "Стиль неизвестного языка",
         hint: "Выберите, как будет выглядеть текст на языке, который персонаж не знает.",
@@ -16,7 +13,6 @@ Hooks.once("init", () => {
         default: "gibberish"
     });
 
-    // 2. Энричер для Таблиц ^^#?1d6?ИмяТаблицы^^
     CONFIG.TextEditor.enrichers.push({
         pattern: /\^\^#(?:\?(?<number>\d+d?\d*)\?)?(?<tableName>.*?)\^\^/g,
         enricher: async (match, options) => {
@@ -46,7 +42,6 @@ Hooks.once("init", () => {
         }
     });
 
-    // 3. Энричер для Языков ~~(Язык)Текст~~
     CONFIG.TextEditor.enrichers.push({
         pattern: /~~(?:\((?<language>.*?)\))(?<text>.*?)~~/g,
         enricher: async (match, options) => {
@@ -63,7 +58,6 @@ Hooks.once("init", () => {
                 return createLanguageSpan(formatHiddenText(originalText, style), match.groups.language, false, "Выберите токен!");
             }
 
-            // Динамическая проверка через лейблы (как вы и хотели)
             const knownLanguages = actor.system.traits?.languages?.labels?.languages || [];
             const knowsLanguage = knownLanguages.some(l => l.toLowerCase() === targetLanguage);
 
@@ -76,8 +70,6 @@ Hooks.once("init", () => {
         }
     });
 });
-
-// --- Вспомогательные функции ---
 
 async function findTable(name) {
     let table = game.tables.getName(name);
