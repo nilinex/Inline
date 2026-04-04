@@ -1,6 +1,6 @@
 За основу идеи был взят модуль [Inline Table Rolls](https://github.com/spaceman023/Inline-Table-Rolls), переработан и изменен.
 
-Ссылка для установки на Foundry VTT: https://github.com/nilinex/Inline/blob/main/module.json<br>
+Ссылка для установки на Foundry VTT: https://raw.githubusercontent.com/nilinex/Inline/refs/heads/main/module.json<br>
 Тестировалось на версии 13.350, в системе DnD 5e 5.2.5.<br>
 При обнаружении багов, просьба сообщать мне в ТГ.<br>
 
