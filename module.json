@@ -16,7 +16,7 @@
   "scripts": [
     "inline.js"
   ],
-  "manifest": "https://raw.githubusercontent.com/nilinex/Inline/main/module.json",
+  "manifest": "https://raw.githubusercontent.com/nilinex/Inline/refs/heads/main/module.json",
   "download": "https://github.com/nilinex/Inline/archive/refs/tags/v0.0.1.zip",
   "readme": "https://github.com/nilinex/Inline/blob/main/README.md",
   "url": "https://github.com/nilinex/Inline",
