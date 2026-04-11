@@ -71,7 +71,7 @@ function createLanguageSpan(originalText, isKnown, targetLanguage, style) {
         return span;
     }
 	const translationData = applyDndTranslator(originalText, langKey);
-	if (langKey === "thief"){
+	if (langKey === "cant"){
 		if (isKnown) {
             span.innerHTML = `<i class="lang-label-Known">(${UPtargetLanguage})</i> <i class="translation">[${translationData.sounds}]</i> ${originalText}`;
         } else {
@@ -136,7 +136,7 @@ const visualStyles = {
     orc: 		{ c: "#ff5555"}, primordial:{ c: "#ffdd88"},
     elf: 		{ c: "#88ffcc"}, sylvan: 	{ c: "#88ffcc"},
     drow: 		{ c: "#ff88ff"}, dragon: 	{ c: "#ffdd44"},
-    celestial: 	{ c: "#aaffff"}, thief: 	{ c: "#ffdd77"},
+    celestial: 	{ c: "#aaffff"}, cant: 		{ c: "#ffdd77"},
     deep: 		{ c: "#44ccff"}
 };
 
@@ -190,7 +190,7 @@ const langMap = {
     "гоблинский": "goblin", 	"орочий": "orc", 			"первичный": "primordial",
     "эльфийский": "elf", 		"сильван": "sylvan", 		"подземный": "drow",
     "драконий": "dragon", 		"глубинная речь": "deep", 	"глубинный": "deep", 
-    "небесный": "celestial", 	"воровской жаргон": "thief","воровской": "thief",
+    "небесный": "celestial", 	"воровской жаргон": "cant", "воровской": "cant",
     "всеобщий": "common"
 };
 
@@ -206,7 +206,7 @@ function getGlyphDict(key) {
 function applyDndTranslator(text, dictKey) {
     const style = visualStyles[dictKey];
     
-    if (dictKey === "thief") {
+    if (dictKey === "cant") {
         let thiefUnknown = text;
         let thiefKnownSounds = text;
         const runeStyle = `color: ${style.c}; text-shadow: ${baseTextShadow}; font-family: 'Noto Sans Symbols 2';`;
