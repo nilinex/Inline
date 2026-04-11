@@ -43,7 +43,10 @@ Hooks.once("init", () => {
             const targetLanguage = match.groups.language.trim().toLowerCase();
             const originalText = match.groups.text.trim();
             const style = game.settings.get("Inline", "unknownLanguageStyle");	
-			const isKnown = game.user.isGM || (game.user.character?.system?.traits?.languages?.labels?.languages || []).some(l => l.toLowerCase() === targetLanguage);
+			const isKnown = game.user.isGM || 
+							(game.user.character?.system?.traits?.languages?.labels?.languages || []).some(l => l.toLowerCase() === targetLanguage) ||
+							(game.user.character?.system?.traits?.languages.value || []).some(l => l.toLowerCase() === langMap[targetLanguage]);
+							//добавить для пф2е
 			return createLanguageSpan(originalText, isKnown, targetLanguage, style);
         }
     });
@@ -92,23 +95,38 @@ function formatBasicHiddenText(text, style) {
     }
     return text;
 }
-
+//без прилагательных
 const thiefWordsDict = {
-    "золото": { 	cant: "железо", 			glyph: "⌘" }, "серебро": { 				cant: "камень", 		glyph: "⌫" }, 
-    "отмычки": { 	cant: "палки", 				glyph: "⌬" }, "яд": { 					cant: "масло", 			glyph: "⌭" }, 
-    "кинжал": { 	cant: "столовый прибор", 	glyph: "⌮" }, "ограбить": { 			cant: "чистка", 		glyph: "⌯" }, 
-    "украсть": { 	cant: "новинка", 			glyph: "⌰" }, "цель": { 				cant: "полуорк", 		glyph: "⌱" }, 
-    "трюк": { 		cant: "твист", 				glyph: "⌲" }, "смерть": { 				cant: "мороз", 			glyph: "⌳" }, 
-    "убийство": { 	cant: "подарок", 			glyph: "⌴" }, "скрыть оружие": { 		cant: "принаряжаемся", 	glyph: "⌵" }, 
-    "магия": { 		cant: "петь", 				glyph: "⌶" }, "очаровать": { 			cant: "поцелуй", 		glyph: "⌷" }, 
-    "стража": { 	cant: "плащи", 				glyph: "⌸" }, "тюрьма": { 				cant: "отдыхает", 		glyph: "⌹" }, 
-    "скупщик": { 	cant: "кузнец", 			glyph: "⌺" }, "грим": { 				cant: "штукатурка", 	glyph: "⌻" }, 
-    "калтропы": { 	cant: "гнездо ворона", 		glyph: "⌼" }, "карманник": { 			cant: "чистильщик", 	glyph: "⌽" }, 
-    "мошенник": { 	cant: "повар", 				glyph: "⌾" }, "игра": { 				cant: "обед", 			glyph: "⌿" }, 
-    "карты": { 		cant: "бумажки", 			glyph: "⍀" }, "кости": { 				cant: "кастет", 		glyph: "⍁" }, 
-    "ставки": { 	cant: "еда", 				glyph: "⍂" }, "напоить": { 				cant: "гольшом", 		glyph: "⍃" }, 
-    "ранить": { 	cant: "боком", 				glyph: "⍄" }, "казнить": { 				cant: "танец", 			glyph: "⍅" }, 
-    "добыча": { 	cant: "берлога", 			glyph: "⍆" }, "магический предмет": { 	cant: "кусок железа", 	glyph: "⍇" }
+    "золот": { cant: "желез", glyph: "⌘", endings: { }}, 
+	"серебр": { cant: "кам", glyph: "⌫" , endings: { "о": "ень", "а": "ня","у": "ню","ом": "нем", "е": "не"}}, 
+    "отмыч": { cant: "пал", glyph: "⌬", endings:   { "ек": "ок"}}, 
+	"яд": { cant: "масл", glyph: "⌭" , endings:    { "": "о", "ы": "а"}}, 
+    "кинжал": {cant:"черпак", glyph:"⌮" , endings: { "ы": "и"}}, //столовый прибор
+	"ограб": { cant: "очист", glyph: "⌯", endings: { "лю": "**щу", "ь": "и", "ьте": "ите", "ленный": "**щенный"}}, 
+    "укра": { cant: "обнови", glyph: "⌰", endings: { "ду":"*лю","дёшь":"шь","дешь":"шь","дёт":"т","дет":"т","дём":"м","дем":"м","дёте":"те","дете":"те","дут":"*ят","ди":"","дите":"те","денный":"*лённый"}}, //новинка
+	"цел": { cant: "ноч", glyph: "⌱", endings: 	   { }}, //полуорк
+    "трюк": { cant: "твист", glyph: "⌲", endings:  { "и": "ы"}}, 
+	"смерт": { cant:"измороз", glyph:"⌳", endings: { }}, //мороз
+    "убийств":{ cant: "подарк", glyph:"⌴", endings:{ "о": "*ок", "а": "и"}},
+	"разоруж": { cant:"принаряд",glyph:"⌵",endings:{ "усь": "*жусь"}}, //скрыть оружие-принаряжаемся
+    "маги": { cant: "песн", glyph: "⌶", endings:   { }}, //петь
+	"очаровани":{cant:"поцелу", glyph:"⌷", endings:{ "е": "й", "и": "е"}}, //очаровать
+    "стражник": { cant: "плащ", glyph: "⌸",endings:{ }}, //стража-плащи
+	"тюрьм": { cant: "отпуск", glyph: "⌹", endings:{ "а": "", "ы": "а", "у": "", "ой": "ом"}}, //отдыхает
+    "скупщик": { cant: "кузнец", glyph:"⌺",endings:{ }}, 
+	"грим": { cant: "сло", glyph: "⌻", endings:    { "": "й", "а": "я", "у": "ю", "ом":"ем"}}, //штукатурка
+    "калтроп": { cant:"чеснок",glyph: "⌼", endings:{ "ы":"","ов":"а","ам":"у","ами":"ом","ах":"е"}}, //гнездо ворона
+	"карманник":{cant:"чистильщик",glyph:"⌽",endings:{ }}, 
+    "мошенник":{ cant:"повар", glyph: "⌾" ,endings:{ }}, 
+	"игр": { cant: "обед", glyph: "⌿", endings:    { "а":"","ы":"а","у":"","ой":"ом"}}, //ладно. без ДП (нет примеров) Работа Охота Авантюра
+    "карт": { cant: "бумажк", glyph: "⍀", endings: { "ы":"и", "":"*ек"}}, 
+	"кост": { cant: "кастет", glyph: "⍁", endings: { "и":"", "ей":"а", "ям":"у", "ями":"ом", "ях":"е"}}, 
+    "ставк": { cant: "еда", glyph: "⍂" ,endings:   { "и":"ы"}}, 
+	"напо": { cant:"рассмеш", glyph: "⍃", endings: { "ю":"у", "ят":"ат"}}, //гольшом
+    "ран": { cant: "покрест", glyph: "⍄", endings: { "ю":"**щу", "ь":"и", "ьте":"ите", "енный":"**щённый", }}, //боком
+	"казн": { cant: "жен", glyph: "⍅", endings:    { }}, //танец
+    "добыч": { cant: "берлог", glyph:"⍆", endings: { }}, 
+	"предмет": { cant: "куск", glyph:"⍇", endings: { "":"*ок"}}
 };
 
 const visualStyles = {
@@ -165,7 +183,7 @@ const fantasySounds = {
     celestial: {а:"ael",б:"bael",в:"vael",г:"gael",д:"dael",е:"el",ё:"eol",ж:"zhael",з:"zael",и:"iel",й:"yiel",к:"kael",л:"lael",м:"mael",н:"nael",о:"ol",
 				п:"pael",р:"rael",с:"sael",т:"tael",у:"uel",ф:"fael",х:"hael",ц:"tsael",ч:"chael",ш:"shael",щ:"shael",ъ:"",ы:"yel",ь:"",э:"el",ю:"yuel",я:"yael"}
 };
-
+//можно добавить удобные синонимы
 const langMap = {
     "инфернальный": "infernal", "бездна": "abyssal", 		"бездны": "abyssal",
     "дварфийский": "dwarf", 	"великаний": "giant", 		"гномий": "gnome",
@@ -192,12 +210,31 @@ function applyDndTranslator(text, dictKey) {
         let thiefUnknown = text;
         let thiefKnownSounds = text;
         const runeStyle = `color: ${style.c}; text-shadow: ${baseTextShadow}; font-family: 'Noto Sans Symbols 2';`;
-
-        for (let [ruWord, data] of Object.entries(thiefWordsDict)) {
-            let regex = new RegExp(`(?<![а-яёА-ЯЁ])${ruWord}(?![а-яёА-ЯЁ])`, "gi");
-            thiefUnknown = thiefUnknown.replace(regex, `${data.cant} (<span style="${runeStyle}">${data.glyph}</span>)`);
-            thiefKnownSounds = thiefKnownSounds.replace(regex, data.cant);
-        }
+		for (let [root, data] of Object.entries(thiefWordsDict)) {
+			const regex = new RegExp(`(?<![а-яёА-ЯЁ])(${root})([а-яё]*)(?![а-яёА-ЯЁ])`, "gi");
+			const processMatch = (match, foundRoot, foundEnding) => {
+				let endingToLower = foundEnding.toLowerCase();
+				let targetEnding = foundEnding;
+				if (data.endings && data.endings[endingToLower] !== undefined) {
+					targetEnding = data.endings[endingToLower];
+				}
+				let finalCant = data.cant;
+				while (targetEnding.startsWith('*')) {
+					finalCant = finalCant.slice(0, -1);
+					targetEnding = targetEnding.slice(1);
+				}
+				if (foundRoot[0] === foundRoot[0].toUpperCase()) {
+					finalCant = finalCant.charAt(0).toUpperCase() + finalCant.slice(1);
+				}
+				return finalCant + targetEnding;
+			};
+			thiefUnknown = thiefUnknown.replace(regex, (match, p1, p2) => {
+				return `${processMatch(match, p1, p2)} (<span style="${runeStyle}">${data.glyph}</span>)`;
+			});
+			thiefKnownSounds = thiefKnownSounds.replace(regex, (match, p1, p2) => {
+				return processMatch(match, p1, p2);
+			});
+		}
         return { thiefUnknown, sounds: thiefKnownSounds, color: style.c };
     }
 

@@ -8,7 +8,7 @@
       "flags": {}
     }
   ],
-  "version": "0.1.0",
+  "version": "0.1.1",
   "compatibility": {
     "minimum": "12",
     "verified": "13"
@@ -17,7 +17,7 @@
     "inline.js"
   ],
   "manifest": "https://raw.githubusercontent.com/nilinex/Inline/main/module.json",
-  "download": "https://github.com/nilinex/Inline/archive/refs/tags/v0.0.1.zip",
+  "download": "https://github.com/nilinex/Inline/archive/refs/tags/v0.1.1.zip",
   "readme": "https://github.com/nilinex/Inline/blob/main/readme.md",
   "description": "<p>Модуль для перевода на вымышленные языки и отратно для героев, их знающих. Работает в чате, журналах и с описанием предметов.</p>",
   "url": "https://github.com/nilinex/Inline",
