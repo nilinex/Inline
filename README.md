@@ -8,14 +8,14 @@
 ```
 https://raw.githubusercontent.com/nilinex/Inline/refs/heads/main/module.json
 ```
-Тестировалось на версии 13.350, в системе DnD 5e 5.2.5. При обнаружении багов, просьба сообщать в ТГ.
+Тестировалось на версии 13.350, в системе DnD 5e 5.2.5.
 
 2. Включите модуль в управлении модулями вашего мира.
 
 ## Использование в игре
-Удостовериться, что в настройках участника выбран персонаж игкрока. 
+Убедитесь, что в настройках участника выбран персонаж игрока. 
 
-Использовать следующий синтаксис:
+Используйте следующий синтаксис:
 ```
 ~(Название языка)Текст~
 ```
@@ -26,13 +26,13 @@ https://raw.githubusercontent.com/nilinex/Inline/refs/heads/main/module.json
 ## Настройки
 В настройках параметров мастеру доступен выбор, как именно будет заменен текст для тех, кто язык не знает:
 
-<img width="519" height="128" alt="image" src="https://github.com/user-attachments/assets/415cc1a9-7ca0-4c08-96a1-2ca539782231" />
+<img width="518" height="186" alt="image" src="https://github.com/user-attachments/assets/9e18e399-d166-4907-a39b-ae309c5facd8" />
 
 ### 1. Случайные символы 
 Все символы заменяются на случайные.
-   > `~(эльфийский) Приветствую вас, путники леса!~`
-<img width="300" height="103" alt="image" src="https://github.com/user-attachments/assets/231ac9db-7b39-43c4-93e8-ea3fe8cb64f3" />
-<img width="300" height="101" alt="image" src="https://github.com/user-attachments/assets/44808625-f437-4841-874b-94f03547ebb2" />
+   > `~(эльфийский) Приветствую вас, путники!~`
+<img width="300" alt="image" src="https://github.com/user-attachments/assets/d53d389b-b1a2-446b-843e-1e10b9a2ed53" />
+<img width="300" alt="image" src="https://github.com/user-attachments/assets/9aec94d2-be1f-43a1-b9c1-dfbf2cca0f0d" />
 
 ### 2. Земенять на *** 
 Все символы будут изменены на знак *.
@@ -40,20 +40,20 @@ https://raw.githubusercontent.com/nilinex/Inline/refs/heads/main/module.json
 <img width="300" height="103" alt="image" src="https://github.com/user-attachments/assets/e8ee9713-dcfe-4a6e-a5f3-73e650d410fb" />
 <img width="300" alt="image" src="https://github.com/user-attachments/assets/beebc077-205b-451a-91bb-015a93804053" />
 
-### 3. Перевод от [dnd_ekb_ekaterinburg](https://youngdrug6666-ship-it.github.io/-dnd-translator-ru/) 
+### 3. Перевод от [MasterM4C9](https://youngdrug6666-ship-it.github.io/-dnd-translator-ru/) 
 Заменяет текст рунами, меняет стиль, как на сайте автора, а для тех, кому язык известен - указывает вариант прочтения.
    > `~(Небесный) Свет укажет нам путь...~`
-<img width="300" alt="image" src="https://github.com/user-attachments/assets/9214e91e-2b83-4899-8b78-1a73a5a4d068" />
-<img width="300" alt="image" src="https://github.com/user-attachments/assets/5fcfaeb7-39c6-4ec2-8f71-aba415df136b" />
+<img width="300" alt="image" src="https://github.com/user-attachments/assets/11865409-f788-49ea-aaea-5448797fbef0" />
+<img width="300" alt="image" src="https://github.com/user-attachments/assets/1a51e080-b391-4cb9-a045-8ff033b68e9c" />
 
    Доступные языки в этом варианте настроек:
-   > эльфийский, сильван, небесный, инфернальный, бездна, подземный, глубинная речь, дварфийский, великаний, гномий, гоблинский, орочий, первичный, драконий, воровской жаргон.
+   > эльфийский, сильван, небесный, инфернальный, бездна, подземный, глубинная речь, дварфийский, великаний, гномий, гоблинский, орочий, первичный, драконий, воровской жаргон, друидический.
    
    Не переживайте, если требуемый язык не указан! Для него будет использован перевод по умолчанию (1. Случайные символы).
 
    Воровской жаргон также адаптирован:
    
-   v0.1.1 Добавлено критическое обновление!
+   v0.1.1 Добавлено критическое обновление! Изменены некоторые слова автора, для использования жаргона в полноценных предложениях.
    > `~(воровской жаргон) У нас есть цель, там много золота, но мешают стражники.~`
 <img width="300" alt="image" src="https://github.com/user-attachments/assets/108335b0-fc85-43dd-896d-3cff47a6d2a6" />
 <img width="300" alt="image" src="https://github.com/user-attachments/assets/3b98adf7-8791-4d23-ae07-a803be6b2c13" />
@@ -91,10 +91,8 @@ https://raw.githubusercontent.com/nilinex/Inline/refs/heads/main/module.json
    > предмет - кусок(⍇) //манический предмет - кусок железа
   
 ## Поддержка
-Поддержать разработку можете подпиской на мои соцсети: 
+Поддержать разработку можете подпиской на мои соцсети, там же сможете оставить обратную связь и сообщить об ошибках, с которыми столкнулись: 
 
 https://t.me/teni_burelomov
-
-https://vk.com/teni_burelomov
 
 Всем спасибо и 𝔜𝔉𝔄ℜ𝔖𝕵ℌ 𝔐𝔈𝔙!
