@@ -28,15 +28,11 @@ Hooks.once("init", () => {
         choices: {
             "gibberish": 	"Случайные символы",
             "aaaaa": 		"Заменять на ***",
-            "critsandfails":"Перевод от critsandfails_dnd_ekb"
+            "critsandfails":	"Перевод от MasterM4C9"
         },
         default: "gibberish"
     });
 
-//originalText 	 - текст из паттерна
-//targetLanguage - язык из паттерна
-//style 		 - стиль из настроек
-//isKnown	 	 - результат проверки знания языка (true для гм)
     CONFIG.TextEditor.enrichers.push({
         pattern: /~\((?<language>[^)]+)\)(?<text>.*?)~/g,
         enricher: async (match, options) => {
@@ -46,7 +42,6 @@ Hooks.once("init", () => {
 			const isKnown = game.user.isGM || 
 							(game.user.character?.system?.traits?.languages?.labels?.languages || []).some(l => l.toLowerCase() === targetLanguage) ||
 							(game.user.character?.system?.traits?.languages.value || []).some(l => l.toLowerCase() === langMap[targetLanguage]);
-							//добавить для пф2е
 			return createLanguageSpan(originalText, isKnown, targetLanguage, style);
         }
     });
@@ -70,21 +65,31 @@ function createLanguageSpan(originalText, isKnown, targetLanguage, style) {
         }
         return span;
     }
-	const translationData = applyDndTranslator(originalText, langKey);
-	if (langKey === "cant"){
-		if (isKnown) {
-            span.innerHTML = `<i class="lang-label-Known">(${UPtargetLanguage})</i> <i class="translation">[${translationData.sounds}]</i> ${originalText}`;
-        } else {
-            span.innerHTML = `<span>${translationData.thiefUnknown}</span>`;
+	const translationData = applyDndTranslator(originalText, langKey); 
+    
+    if (langKey === "thief"){ 
+        if (isKnown) { 
+            span.innerHTML = `<i class="lang-label-Known">(${UPtargetLanguage})</i> <i class="translation">[${translationData.sounds}]</i> ${originalText}`; 
+        } else { 
+            span.innerHTML = `<span>${translationData.thiefUnknown}</span>`; 
+        } 
+        return span; 
+    } else if (isKnown) { 
+        span.innerHTML = `<i class="lang-label-Known">(${UPtargetLanguage})</i> <i class="translation">[${translationData.sounds}]</i> ${originalText}`; 
+    } else if (langKey === "deep") {
+        let hiddenText = formatBasicHiddenText(originalText, "aaaaa");
+        span.innerHTML = `<i class="lang-label-NOKnown">(Неизвестный язык)</i>  ${hiddenText}`;
+    } else if (langKey === "druidic") {
+        let druidicStyle = `color: ${translationData.color || '#2d5a27'}; text-shadow: ${baseTextShadow}; letter-spacing: 2px;`;
+        span.innerHTML = `<i class="lang-label-NOKnown">(Неизвестный язык)</i> <span style="${druidicStyle}">${translationData.glyphs}</span>`;
+    } else { 
+        let glyphStyle = `color: ${translationData.color}; text-shadow: ${baseTextShadow}; font-family: 'Noto Sans Symbols 2'; letter-spacing: 1px;`; 
+    	if (langKey === "celestial") {
+            glyphStyle += ` direction: rtl; display: inline-block; unicode-bidi: isolate;`;
         }
-        return span;
-	} else if (isKnown) {
-		span.innerHTML = `<i class="lang-label-Known">(${UPtargetLanguage})</i> <i class="translation">[${translationData.sounds}]</i> ${originalText}`;
-    } else {
-		const glyphStyle = `color: ${translationData.color}; text-shadow: ${baseTextShadow}; font-family: 'Noto Sans Symbols 2'; letter-spacing: 1px;`;
-		span.innerHTML = `<i class="lang-label-NOKnown">(Неизвестный язык)</i> <span style="${glyphStyle}">${translationData.glyphs}</span>`;	
-    }
-    return span;
+        span.innerHTML = `<i class="lang-label-NOKnown">(Неизвестный язык)</i> <span style="${glyphStyle}">${translationData.glyphs}</span>`; 
+    } 
+    return span; 
 }
 
 function formatBasicHiddenText(text, style) {
@@ -95,7 +100,7 @@ function formatBasicHiddenText(text, style) {
     }
     return text;
 }
-//без прилагательных
+
 const thiefWordsDict = {
     "золот": { cant: "желез", glyph: "⌘", endings: { }}, 
 	"серебр": { cant: "кам", glyph: "⌫" , endings: { "о": "ень", "а": "ня","у": "ню","ом": "нем", "е": "не"}}, 
@@ -130,14 +135,14 @@ const thiefWordsDict = {
 };
 
 const visualStyles = {
-    infernal: 	{ c: "#ff6600"}, abyssal: 	{ c: "#cc00ff"},
+    infernal: 		{ c: "#ff6600"}, abyssal: 	{ c: "#cc00ff"},
     dwarf: 		{ c: "#ffdd88"}, giant: 	{ c: "#ffdd88"},
     gnome: 		{ c: "#ff99ff"}, goblin: 	{ c: "#88ff88"},
-    orc: 		{ c: "#ff5555"}, primordial:{ c: "#ffdd88"},
+    orc: 		{ c: "#ff5555"}, primordial:	{ c: "#ffdd88"},
     elf: 		{ c: "#88ffcc"}, sylvan: 	{ c: "#88ffcc"},
     drow: 		{ c: "#ff88ff"}, dragon: 	{ c: "#ffdd44"},
-    celestial: 	{ c: "#aaffff"}, cant: 		{ c: "#ffdd77"},
-    deep: 		{ c: "#44ccff"}
+    celestial: 		{ c: "#aaffff"}, thief: 	{ c: "#ffdd77"},
+    deep: 		{ c: "#44ccff"}, druidic:   	{ c: "#44ff88"}
 };
 
 const charGlyphs = {
@@ -150,7 +155,9 @@ const charGlyphs = {
     dragon: {	а:"𒀀", б:"𒀁", в:"𒀂", г:"𒃃", д:"𒀄", е:"𒀅", ё:"𒀆", ж:"𒀇", з:"𒀈", и:"𒀉", й:"𒀊", к:"𒀋", л:"𒀌", м:"𒀍", н:"𒀎", о:"𒀏", 
 				п:"𒀐", р:"𒀑", с:"𒀒", т:"𒀓", у:"𒀔", ф:"𒀕", х:"𒀖", ц:"𒀗", ч:"𒀘", ш:"𒀙", щ:"𒀚", ъ:"𒀛", ы:"𒀜", ь:"𒀝", э:"𒀞", ю:"𒀟", я:"𒀠"},
     celestial: {а:"𐡀", б:"𐡁", в:"𐡅", г:"𐡂", д:"𐡃", е:"𐡄", ё:"𐡟", ж:"𐡆", з:"𐡈", и:"𐡉", й:"𐡝", к:"𐡊", л:"𐡋", м:"𐡌", н:"𐡍", о:"𐡏", 
-				п:"𐡐", р:"𐡓", с:"𐡔", т:"𐡕", у:"𐡜", ф:"𐡗", х:"𐡘", ц:"𐡙", ч:"𐡞", ш:"𐡑", щ:"𐡇", ъ:"𐡎", ы:"𐡛", ь:"𐡛", э:"𐭪", ю:"𐭫", я:"𐭮"}
+				п:"𐡐", р:"𐡓", с:"𐡔", т:"𐡕", у:"𐡜", ф:"𐡗", х:"𐡘", ц:"𐡙", ч:"𐡞", ш:"𐡑", щ:"𐡇", ъ:"𐡎", ы:"𐡛", ь:"𐡛", э:"𐭪", ю:"𐭫", я:"𐭮"},
+    druidic: {а:"𐑐",б:"𐑑",в:"𐑒",г:"𐑓",д:"𐑔",е:"𐑕",ё:"𐑖",ж:"𐑗",з:"𐑘",и:"𐑙",й:"𐑚",к:"𐑛",л:"𐑜",м:"𐑝",н:"𐑞",о:"𐑟",
+				п:"𐑠",р:"𐑡",с:"𐑢",т:"𐑣",у:"𐑤", ф:"𐑥",х:"𐑦",ц:"𐑧",ч:"𐑨",ш:"𐑩",щ:"𐑪",ъ:"",ы:"𐑫",ь:"",э:"𐑬",ю:"𐑭",я:"𐑮"}
 };
 
 const fantasySounds = {
@@ -181,16 +188,18 @@ const fantasySounds = {
     deep: {		а:"glu",б:"blu",в:"vlu",г:"gru",д:"dlu",е:"eh",ё:"eoh",ж:"zhu",з:"zu",и:"ih",й:"yih",к:"klu",л:"llu",м:"mlu",н:"nlu",о:"oh",
 				п:"plu",р:"rru",с:"slu",т:"tlu",у:"uh",ф:"flu",х:"khu",ц:"tslu",ч:"chlu",ш:"shlu",щ:"shlu",ъ:"",ы:"u",ь:"",э:"eh",ю:"ulu",я:"alu"},
     celestial: {а:"ael",б:"bael",в:"vael",г:"gael",д:"dael",е:"el",ё:"eol",ж:"zhael",з:"zael",и:"iel",й:"yiel",к:"kael",л:"lael",м:"mael",н:"nael",о:"ol",
-				п:"pael",р:"rael",с:"sael",т:"tael",у:"uel",ф:"fael",х:"hael",ц:"tsael",ч:"chael",ш:"shael",щ:"shael",ъ:"",ы:"yel",ь:"",э:"el",ю:"yuel",я:"yael"}
+				п:"pael",р:"rael",с:"sael",т:"tael",у:"uel",ф:"fael",х:"hael",ц:"tsael",ч:"chael",ш:"shael",щ:"shael",ъ:"",ы:"yel",ь:"",э:"el",ю:"yuel",я:"yael"},
+    druidic: {	а:"al", б:"bir",в:"val",г:"gal",д:"dal",е:"el",ё:"el",ж:"zhal",з:"zal",и:"il",й:"il",к:"kal",л:"lal",м:"mal",н:"nal",о:"ol",
+				п:"pal",р:"ral",с:"sal",т:"tal",у:"ul",ф:"fal",х:"hal",ц:"tsal",ч:"chal",ш:"shal",щ:"shal",ъ:"",ы:"yl",ь:"",э:"el",ю:"yul",я:"yal"}
 };
-//можно добавить удобные синонимы
+
 const langMap = {
-    "инфернальный": "infernal", "бездна": "abyssal", 		"бездны": "abyssal",
+    "инфернальный": "infernal", "бездна": "abyssal", 		"язык бездны": "abyssal",	"бездны": "abyssal",
     "дварфийский": "dwarf", 	"великаний": "giant", 		"гномий": "gnome",
-    "гоблинский": "goblin", 	"орочий": "orc", 			"первичный": "primordial",
-    "эльфийский": "elf", 		"сильван": "sylvan", 		"подземный": "drow",
-    "драконий": "dragon", 		"глубинная речь": "deep", 	"глубинный": "deep", 
-    "небесный": "celestial", 	"воровской жаргон": "cant", "воровской": "cant",
+    "гоблинский": "goblin", 	"орочий": "orc", 		"первичный": "primordial",
+    "эльфийский": "elf", 	"сильван": "sylvan", 		"подземный": "drow",
+    "драконий": "dragon", 	"глубинная речь": "deep", 	"глубинный": "deep", 
+    "небесный": "celestial", 	"воровской жаргон": "thief",	"воровской": "thief",		"друидический": "druidic",
     "всеобщий": "common"
 };
 
@@ -200,13 +209,14 @@ function getGlyphDict(key) {
     if (["dwarf", "giant", "gnome", "goblin", "orc", "primordial"].includes(key)) return charGlyphs.dwarf;
     if (key === "dragon") return charGlyphs.dragon;
     if (key === "celestial") return charGlyphs.celestial;
+    if (key === "druidic") return charGlyphs.druidic;
     return null;
 }
 
 function applyDndTranslator(text, dictKey) {
     const style = visualStyles[dictKey];
     
-    if (dictKey === "cant") {
+    if (dictKey === "thief") {
         let thiefUnknown = text;
         let thiefKnownSounds = text;
         const runeStyle = `color: ${style.c}; text-shadow: ${baseTextShadow}; font-family: 'Noto Sans Symbols 2';`;
